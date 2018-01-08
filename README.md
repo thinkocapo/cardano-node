@@ -1,6 +1,13 @@
 # How-to-run-Cardano-Node
 The program itself is called cardano-sl which stands for [Settlement Layer](https://cardanodocs.com/introduction/) and they'll be releasing the Computation Layer soon. If you are here because you are stuck on an error during install/config, then scroll to the bottom to see the list of errors I encountered.
 
+The first set of instructions we use is:
+https://github.com/input-output-hk/cardano-sl/blob/develop/docs/how-to/build-cardano-sl-and-daedalus-from-source-code.md
+and the second set is a command from:
+https://github.com/input-output-hk/cardano-sl/blob/develop/docs/how-to/connect-to-cluster.md
+So I built this tutorial because all of that was not readily apparent to me and I want other web developers like me to have an easy time figure this all out!
+
+
 ## Getting Started
 
 1. Follow all instructions under 'Common Build Steps' from here:
