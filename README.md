@@ -4,29 +4,29 @@ The program itself is called cardano-sl which stands for [Settlement Layer](http
 ## Getting Started
 
 1. Follow all instructions under 'Common Build Steps' from here:
-```
-https://github.com/input-output-hk/cardano-sl/blob/develop/docs/how-to/build-cardano-sl-and-daedalus-from-source-code.md
-```
-Tip - If you install nix and ever get the error 'command nix-build not found', see note below*
+   ```
+   https://github.com/input-output-hk/cardano-sl/blob/develop/docs/how-to/build-cardano-sl-and-daedalus-from-source-code.md
+   ```
+   Tip - If you install nix and ever get the error 'command nix-build not found', see note below*
 
 2. Follow instructions under 'Nix Mode Build (recommended)' from the same above link. BUT when you get to step 2 in 'Nix Mode Build (recommended)' do:
-```
-$ nix-build -A cardano-sl-static --cores 0 --max-jobs 2 --no-build-output --out-link master
-```
-instead of:
-```
-$ nix-build -A cardano-sl-node-static --cores 0 --max-jobs 2 --no-build-output --out-link master
-```
-Explanation as to why you do this**
+   ```
+   $ nix-build -A cardano-sl-static --cores 0 --max-jobs 2 --no-build-output --out-link master
+   ```
+   instead of:
+   ```
+   $ nix-build -A cardano-sl-node-static --cores 0 --max-jobs 2 --no-build-output --out-link master
+   ```
+   Explanation as to why you do this**
 
-And skip the step that says `ls master/bin` and don't bother trying to run `master/bin/cardano-mode-simple` or you'll get an error***
+   And skip the step that says `ls master/bin` and don't bother trying to run `master/bin/cardano-mode-simple` or you'll get    an error***
 
-Instead, do this:
+   Instead, do this:
 
 3. Build a better startup script by running:
-`nix-build -A connectScripts.mainnetWallet -o connect-to-mainnet`
-This starts your node and connects it to a wallet as well as the mainnet. The script this produces ends up in parent-level of your cardano project: ~/path-to-your/cardano/connect-to-mainnet` so `cd` there and run it by:
-`./connect-to-mainnet`
+   `nix-build -A connectScripts.mainnetWallet -o connect-to-mainnet`
+   This starts your node and connects it to a wallet as well as the mainnet. The script this produces ends up in parent-    level of your cardano project: ~/path-to-your/cardano/connect-to-mainnet` so `cd` there and run it by:
+   `./connect-to-mainnet`
 
 
 ## Troubleshooting Notes
