@@ -30,7 +30,7 @@ This starts your node and connects it to a wallet as well as the mainnet. The sc
 
 
 ## Troubleshooting Notes
-* Maybe its because the install updated your `bash` files but you're using something like `zshell` instead, this was my problem. So change into bash shell by doing `exec bash`, then continue the tutorial. Note - I tried updating my `/etc/zshrc` file with what the install did to `/etc/bashrc` but it wouldn't let me, despite using `chmod` commands on it to change file read/write permissions.
+\* Maybe its because the install updated your `bash` files but you're using something like `zshell` instead, this was my problem. So change into bash shell by doing `exec bash`, then continue the tutorial. Note - I tried updating my `/etc/zshrc` file with what the install did to `/etc/bashrc` but it wouldn't let me, despite using `chmod` commands on it to change file read/write permissions.
 
 ** If you use `cardano-sl-node-static` then you'll get error `error: attribute ‘cardano-sl-node-static’ in selection path ‘cardano-sl-node-static’ not found`
 Here is the (Issue)[https://github.com/input-output-hk/cardano-sl/issues/2212] and (PR)[https://github.com/input-output-hk/cardano-sl/pull/2186/commits/c0395e6892140e5bd12d881b2b880429c9f81698] that explains why you need to do this
