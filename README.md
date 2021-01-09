@@ -5,17 +5,16 @@ https://forum.cardano.org/
 
 https://docs.cardano.org/projects/cardano-node/en/latest/getting-started/understanding-config-files.html
 
+## Download
 [Installing the node from source](https://docs.cardano.org/projects/cardano-node/en/latest/getting-started/install.html)
 
-*Download it:*
-https://hydra.iohk.io/build/5288424 executable
+https://hydra.iohk.io/build/5288424 executable  
 https://github.com/input-output-hk/cardano-node/releases full project
 
-[How to build a haskell stakepool node - coincashew](https://www.coincashew.com/coins/overview-ada/guide-how-to-build-a-haskell-stakepool-node)
-
-[Docker cardano-node](https://hub.docker.com/r/inputoutput/cardano-node)
+[Docker cardano-node](https://hub.docker.com/r/inputoutput/cardano-node)  
 [Docker nessus-cardano](https://github.com/tdiesler/nessus-cardano)  
-> "This effort aims to provide the best-possible container image for Cardano"
+
+> "This effort aims to provide the best-possible container image for Cardano"  
 It uses https://hub.docker.com/r/nessusio/cardano and [Dockerfile](https://github.com/tdiesler/nessus-cardano/blob/master/node/docker/Dockerfile)
 
 https://developers.cardano.org/ not much
@@ -37,39 +36,33 @@ git rev 8e0501f4352a00a00330dc7641b1a7583c52e643
 ```
 
 ## Run
-1. 
 ```
 ./cardano-node run --topology ./configuration/cardano/mainnet-topology.json --database-path ./state --port 3001 --config ./configuration/defaults/byron-mainnet/configuration.yaml --socket-path \\.\pipe\cardano-node
 ```
 
 ## Next
-- CORRECT is this correct running?
-- BILLING 
-- READ [Understanding your configuration files and how to use them](https://docs.cardano.org/projects/cardano-node/en/latest/getting-started/understanding-config-files.html)
-- run in VirtualBox
-- run in background (shell, nohup?)
-- how to stop a node from running [how to gracefully restart cardano node](https://forum.cardano.org/t/how-to-gracefully-restart-cardano-node/37543) maybe?
-
-- stake pool on Testnet
-- good metrics for CPU/RAM usage? monitoring - see script's benchmarking too
-- `./state` database file is small, is it trying to reach something 100's GB's?
-`drwxrwxr-x 5 thinkocapo thinkocapo     4096 Jan  9 17:07 state`
-- preferred to run as a `systemd` service
-- try running a Shelley instead of Byron, which features [cardano-cli shelley system stop - command](https://docs.cardano.org/projects/cardano-node/en/latest/reference/cardano-node-cli-reference.html)
-- and slot "297556" is what? block?
+- Q is this ouput (screenshots) correct? on cardano forum
+- Q `./state` database file is small, is it trying to reach something 100's GB's?
+- Q. slot "297556" is what? block?
 ```
 [cardano:cardano.node.ChainDB:Info:5] [2021-01-09 17:07:49.40 UTC] Closed db with immutable tip at e7fed2607e5b613a60589c6a7bd7e00024b9ec1fcede1909a4a8c
 2d4fa90376c at slot 295396 and tip 4e115fcf75a6f49914cb99288351612c2ba912ec824ec64b9724b62c277833ec at slot 297556
 ```
+and  
+`drwxrwxr-x 5 thinkocapo thinkocapo     4096 Jan  9 17:07 state`
+- Q confirm my defaults for genesis, yaml, which nets' correspond to
 
-- https://github.com/input-output-hk/cardano-wallet instead of Daedalus?
-
-
+- Daedalus, and/or [cardano-wallet](https://github.com/input-output-hk/cardano-wallet)
+- READ [Understanding your configuration files and how to use them](https://docs.cardano.org/projects/cardano-node/en/latest/getting-started/understanding-config-files.html)
+- run in VirtualBox
+- use systemd instead of running in background
+- good metrics for CPU/RAM usage? monitoring - see script's benchmarking too
+- try running a Shelley instead of Byron, which features [cardano-cli shelley system stop - command](https://docs.cardano.org/projects/cardano-node/en/latest/reference/cardano-node-cli-reference.html)
 - why build from sourcs vs executable vs docker
 - is this file specifying the genesis.json i'm connecting to?
 https://github.com/input-output-hk/cardano-node/blob/master/configuration/defaults/byron-mainnet/configuration.yaml#L9
-- why would you want to 'The Byron genesis generation operations will create a directory that contains:'? security?
-- should I be using https://github.com/input-output-hk/cardano-node/blob/master/configuration/defaults/byron-mainnet/topology.json instead of 
+- why would you want to 'The Byron genesis generation operations will create a directory that contains:'
+security? vs. use the one that comes with it
 
 
 ### Stake Pool
@@ -86,10 +79,12 @@ https://forum.cardano.org/t/need-help-with-cardano-node-operation/44076/4
 
 [Cardano Staking: Everything You Need to Know About ADA Returns](https://cryptobriefing.com/cardano-staking-ada-returns/)
 
+[How to build a haskell stakepool node - coincashew](https://www.coincashew.com/coins/overview-ada/guide-how-to-build-a-haskell-stakepool-node)
+
 ### Other Technical
 [Why Cardano Chose Haskell](https://forum.cardano.org/t/why-cardano-chose-haskell-and-why-you-should-care/43085)
 
-[Functional Blockchain Contracts](https://iohk.io/en/research/library/papers/functional-blockchain-contracts/)
+[Functional Blockchain Contracts](https://iohk.io/en/research/library/papers/functional-blockchain-contracts)
 
 [Cardano’s real competition is not who you’d expect, says new Cardano Foundation CEO](https://forum.cardano.org/t/cardanos-real-competition-is-not-who-youd-expect-says-new-cardano-foundation-ceo/40903)
 
