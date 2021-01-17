@@ -40,6 +40,30 @@ git rev 8e0501f4352a00a00330dc7641b1a7583c52e643
 ```
 3. touch state
 
+## Setup - Build from Source
+
+https://docs.cardano.org/projects/cardano-node/en/latest/getting-started/install.html  
+and...  
+```
+PATH=$PATH:/home/thinkocapo/.local/bin or export PATH="~/.local/bin:$PATH"
+export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
+export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH"
+```
+and make sure you 
+```
+cabal clean
+cabal update
+# right before you
+cabal build all # for the first time https://docs.cardano.org/projects/cardano-node/en/latest/getting-started/install.html#build-and-install-the-node  
+```
+
+Skip `cabal install all --bindir ~/.local/bin` and run:
+```
+# check version...
+cp -p dist-newstyle/build/x86_64-linux/ghc-8.10.2/cardano-node-1.24.2/x/cardano-node/build/cardano-node/cardano-node ~/.local/bin/
+cp -p dist-newstyle/build/x86_64-linux/ghc-8.10.2/cardano-cli-1.24.2/x/cardano-cli/build/cardano-cli/cardano-cli ~/.local/bin/
+```
+
 ## Run
 ```
 # mainnet
@@ -64,26 +88,24 @@ export CARDANO_NODE_SOCKET_PATH=\\.\pipe\cardano-node
 ## Questions
 - Q. Building from Source vs Download Executable vs Docker. put some discussion here for onlookers.
 - Q. Basic Monitoring, `ps fjx`, Prometheus, script's benchmarking.
+- Q. why would you want to 'The Byron genesis generation operations will create a directory that contains:'
+security? vs. use the one that comes with it
+- Q. need run Byron to Shelley script?
 
 ## Next
-- Try connecting my node to Testnet, then sentry-cli it
-    - Do things with sentry-cli, interacting with my node in VM...
 
-- use systemd (in VM) instead of running in background https://www.youtube.com/watch?v=JXIaQevXlvg
-    - shelley-scripts and systemd https://github.com/DamjanOstrelic/Cardano-stuff
+- Build from Source 
+    in ComputeEngine, VirtualBox, or eC2
+    connecting my node to Mainnet + Testnet, interact with it by sentry-cli it
 
-- Stake Pool course / run in VirtualBox
+- **Stake Pool course**
+- Systemd https://www.youtube.com/watch?v=JXIaQevXlvg and https://github.com/DamjanOstrelic/Cardano-stuff
 - Tmux
 
 - try running a Shelley instead of Byron, which features [cardano-cli shelley system stop - command](https://docs.cardano.org/projects/cardano-node/en/latest/reference/cardano-node-cli-reference.html)
-- try running docker container...
+- try running docker container
 
-- why would you want to 'The Byron genesis generation operations will create a directory that contains:'
-security? vs. use the one that comes with it
-- do the Exercises from that tutorial
-
-- need run Byron to Shelley script?
-
+- do Exercises from docs.cardano.org
 
 ### Stake Pool
 [Staking and delegating for beginners - forum.cardano.org](https://forum.cardano.org/t/staking-and-delegating-for-beginners-a-step-by-step-guide/36681)
@@ -112,7 +134,7 @@ https://forum.cardano.org/t/need-help-with-cardano-node-operation/44076/4
 
 read https://github.com/input-output-hk/cardano-node/releases
 
-[byron-genesis](https://github.com/input-output-hk/cardano-node/blob/master/doc/reference/byron-genesis.md)
+[byron-genesis spec](https://github.com/input-output-hk/cardano-node/blob/master/doc/reference/byron-genesis.md)
 
 Plutus Core is a compilation target, yet https://prod.playground.plutus.iohkdev.io/tutorial/
 
