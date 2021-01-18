@@ -1,9 +1,10 @@
 ### Documentation & Forum
+
 https://docs.cardano.org/projects/cardano-node/en/latest/index.html
+https://docs.cardano.org/projects/cardano-node/en/latest/getting-started/understanding-config-files.html
+https://docs.cardano.org/projects/cardano-node/en/latest/getting-started/cli.html
 
 https://forum.cardano.org/
-
-https://docs.cardano.org/projects/cardano-node/en/latest/getting-started/understanding-config-files.html
 
 ## Download
 [Installing the node from source](https://docs.cardano.org/projects/cardano-node/en/latest/getting-started/install.html)
@@ -22,11 +23,14 @@ https://developers.cardano.org/ not much
 http://astorpool.org/
 
 ## Setup
+In a VM...download the executable (not the [source code from github Releases page](https://github.com/input-output-hk/cardano-node/releases))
 1. wget -c https://hydra.iohk.io/build/5288424/download/1/cardano-node-1.24.2-linux.tar.gz
-2. tar -xzf ../cardano-node-1.24.2-linux.tar.gz
-3. touch state
-
+2. tar -xzf cardano-node-1.24.2-linux.tar.gz
 ```
+# Gives the following executables and some config/log dirs
+ls
+cardano-cli  cardano-node  cardano-node-chairman  cardano-testnet  configuration  logs
+
 cardano-cli 1.24.2 - linux-x86_64 - ghc-8.10
 git rev 8e0501f4352a00a00330dc7641b1a7583c52e643
 
@@ -34,37 +38,108 @@ git rev 8e0501f4352a00a00330dc7641b1a7583c52e643
 cardano-node 1.24.2 - linux-x86_64 - ghc-8.10
 git rev 8e0501f4352a00a00330dc7641b1a7583c52e643
 ```
+3. touch state
+
+## Setup - Build from Source
+
+https://docs.cardano.org/projects/cardano-node/en/latest/getting-started/install.html  
+and...  
+```
+PATH=$PATH:/home/thinkocapo/.local/bin or export PATH="~/.local/bin:$PATH"
+export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
+export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH"
+```
+and make sure you 
+```
+cabal clean
+cabal update
+# right before you
+cabal build all # for the first time https://docs.cardano.org/projects/cardano-node/en/latest/getting-started/install.html#build-and-install-the-node  
+```
+
+Skip `cabal install all --bindir ~/.local/bin` and run:
+```
+# check version...
+cp -p dist-newstyle/build/x86_64-linux/ghc-8.10.2/cardano-node-1.24.2/x/cardano-node/build/cardano-node/cardano-node ~/.local/bin/
+cp -p dist-newstyle/build/x86_64-linux/ghc-8.10.2/cardano-cli-1.24.2/x/cardano-cli/build/cardano-cli/cardano-cli ~/.local/bin/
+```
+
+Change testnet-config.json's `"Protocol": "Cardano"` to `"Protocol": "Tpraos"
 
 ## Run
 ```
+# mainnet
 ./cardano-node run --topology ./configuration/cardano/mainnet-topology.json --database-path ./state --port 3001 --config ./configuration/defaults/byron-mainnet/configuration.yaml --socket-path \\.\pipe\cardano-node
+
+# testnet setup
+```
+change GenesisFile: testnet_genesis.json to GenesisFile: genesis.json
+change protocol in yaml to TPraos, get error There was an error parsing the genesis file: ./configuration/defaults/byron-testnet/genesis.json Error: "Error in $: key \"systemStart\" not found"
+```
+
+# testnet run
+./cardano-node run --topology ./configuration/defaults/byron-testnet/topology.json --database-path ./state --port 3001 --config ./configuration/defaults/byron-testnet/configuration.yaml --socket-path \\.\pipe\cardano-node
+```
+and test it
+```
+export CARDANO_NODE_SOCKET_PATH=\\.\pipe\cardano-node
+./cardano-cli byron query get-tip --mainnet
+./cardano-cli query get-tip --mainnet
+```
+
+key-pair stake  
+key-pair address   
+payment address  
+stake address  
+https://docs.cardano.org/projects/cardano-node/en/latest/stake-pool-operations/keys_and_addresses.html
+
+key-pair offline cold
+https://cardano-foundation.gitbook.io/stake-pool-course/stake-pool-guide/getting-started/cli
+https://docs.cardano.org/projects/cardano-node/en/latest/getting-started/cli.html
+
+
+change testnet-config.json Protocol from TPraos to Cardano
+
+```
+cardano-node run \
+ --topology testnet-topology.json \
+ --database-path db \
+ --socket-path db/node.socket \
+ --host-addr 0.0.0.0 \
+ --port 3001 \
+ --config testnet-config.json
+```
+
+open a new terminal session and:
+
+`export CARDANO_NODE_SOCKET_PATH=~/relay/db/node.socket`  
+```
+thinkocapo@dev-1:~/relay$ cardano-cli shelley query tip --testnet-magic 1097911063
+WARNING: The "shelley" subcommand is now deprecated and will be removed in the future. Please use the top-level commands instead.
+{
+    "blockNo": 324839,
+    "headerHash": "2aa319360e076b263e3f6b2b5772ca3d6d6bd9e206bb3c3a7624e6a8c4fb3358",
+    "slotNo": 325881
+}
 ```
 
 ## Questions
-- Q is this ouput (screenshots) correct? on cardano forum
-- Q `./state` database file is small, is it trying to reach something 100's GB's? `drwxrwxr-x 5 thinkocapo thinkocapo     4096 Jan  9 17:07 state`
-- Q. when I stopped it (ctrl+c) it said slot "297556" is slot of an epic? What is the 'tip' value?
-```
-[cardano:cardano.node.ChainDB:Info:5] [2021-01-09 17:07:49.40 UTC] Closed db with immutable tip at e7fed2607e5b613a60589c6a7bd7e00024b9ec1fcede1909a4a8c
-2d4fa90376c at slot 295396 and tip 4e115fcf75a6f49914cb99288351612c2ba912ec824ec64b9724b62c277833ec at slot 297556
-```
 - Q. Building from Source vs Download Executable vs Docker. put some discussion here for onlookers.
-
-"If you just want to set up a local testnet or connect to an external testnet, less space is needed." aws.md
+- Q. Basic Monitoring, `ps fjx`, Prometheus, script's benchmarking.
+- Q. why would you want to 'The Byron genesis generation operations will create a directory that contains:'
+security? vs. use the one that comes with it
+- Q. need run Byron to Shelley script?
 
 ## Next
-- yaml IS the config, has same properties, including genesis file. can pass a config.json instead then?
-- run in VirtualBox
-- TESTNET cardano-cli vs cardano-wallet. Can do same with cardano-cli as wallet? architecture...and screenshot (cli.md)
-- use systemd instead of running in background
-- good metrics for CPU/RAM usage? monitoring - see script's benchmarking too
-- try running a Shelley instead of Byron, which features [cardano-cli shelley system stop - command](https://docs.cardano.org/projects/cardano-node/en/latest/reference/cardano-node-cli-reference.html)
-- is this file specifying the genesis.json i'm connecting to?
-https://github.com/input-output-hk/cardano-node/blob/master/configuration/defaults/byron-mainnet/configuration.yaml#L9
-- why would you want to 'The Byron genesis generation operations will create a directory that contains:'
-security? vs. use the one that comes with it
-- do the Exercises from that tutorial
 
+- make sure it stays running in background, consider systemd service
+- Systemd https://www.youtube.com/watch?v=JXIaQevXlvg and https://github.com/DamjanOstrelic/Cardano-stuff
+- github issue the Untitled section in stake pool school. videos
+- stake pool course videos
+
+- try running docker container / make my own
+- try running a Shelley instead of Byron, which features [cardano-cli shelley system stop - command](https://docs.cardano.org/projects/cardano-node/en/latest/reference/cardano-node-cli-reference.html)
+- do Exercises from docs.cardano.org
 
 ### Stake Pool
 [Staking and delegating for beginners - forum.cardano.org](https://forum.cardano.org/t/staking-and-delegating-for-beginners-a-step-by-step-guide/36681)
@@ -82,6 +157,9 @@ https://forum.cardano.org/t/need-help-with-cardano-node-operation/44076/4
 
 [How to build a haskell stakepool node - coincashew](https://www.coincashew.com/coins/overview-ada/guide-how-to-build-a-haskell-stakepool-node)
 
+### Upgrade Path
+[backup your binaries](https://cardano-foundation.gitbook.io/stake-pool-course/stake-pool-guide/getting-started/install-node)
+
 ### Other Technical
 [Why Cardano Chose Haskell](https://forum.cardano.org/t/why-cardano-chose-haskell-and-why-you-should-care/43085)
 
@@ -93,7 +171,7 @@ https://forum.cardano.org/t/need-help-with-cardano-node-operation/44076/4
 
 read https://github.com/input-output-hk/cardano-node/releases
 
-[byron-genesis](https://github.com/input-output-hk/cardano-node/blob/master/doc/reference/byron-genesis.md)
+[byron-genesis spec](https://github.com/input-output-hk/cardano-node/blob/master/doc/reference/byron-genesis.md)
 
 Plutus Core is a compilation target, yet https://prod.playground.plutus.iohkdev.io/tutorial/
 
