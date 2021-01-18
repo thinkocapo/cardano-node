@@ -64,6 +64,8 @@ cp -p dist-newstyle/build/x86_64-linux/ghc-8.10.2/cardano-node-1.24.2/x/cardano-
 cp -p dist-newstyle/build/x86_64-linux/ghc-8.10.2/cardano-cli-1.24.2/x/cardano-cli/build/cardano-cli/cardano-cli ~/.local/bin/
 ```
 
+Change testnet-config.json's `"Protocol": "Cardano"` to `"Protocol": "Tpraos"
+
 ## Run
 ```
 # mainnet
@@ -85,6 +87,42 @@ export CARDANO_NODE_SOCKET_PATH=\\.\pipe\cardano-node
 ./cardano-cli query get-tip --mainnet
 ```
 
+key-pair stake  
+key-pair address   
+payment address  
+stake address  
+https://docs.cardano.org/projects/cardano-node/en/latest/stake-pool-operations/keys_and_addresses.html
+
+key-pair offline cold
+https://cardano-foundation.gitbook.io/stake-pool-course/stake-pool-guide/getting-started/cli
+https://docs.cardano.org/projects/cardano-node/en/latest/getting-started/cli.html
+
+
+change testnet-config.json Protocol from TPraos to Cardano
+
+```
+cardano-node run \
+ --topology testnet-topology.json \
+ --database-path db \
+ --socket-path db/node.socket \
+ --host-addr 0.0.0.0 \
+ --port 3001 \
+ --config testnet-config.json
+```
+
+open a new terminal session and:
+
+`export CARDANO_NODE_SOCKET_PATH=~/relay/db/node.socket`  
+```
+thinkocapo@dev-1:~/relay$ cardano-cli shelley query tip --testnet-magic 1097911063
+WARNING: The "shelley" subcommand is now deprecated and will be removed in the future. Please use the top-level commands instead.
+{
+    "blockNo": 324839,
+    "headerHash": "2aa319360e076b263e3f6b2b5772ca3d6d6bd9e206bb3c3a7624e6a8c4fb3358",
+    "slotNo": 325881
+}
+```
+
 ## Questions
 - Q. Building from Source vs Download Executable vs Docker. put some discussion here for onlookers.
 - Q. Basic Monitoring, `ps fjx`, Prometheus, script's benchmarking.
@@ -94,17 +132,13 @@ security? vs. use the one that comes with it
 
 ## Next
 
-- Build from Source 
-    in ComputeEngine, VirtualBox, or eC2
-    connecting my node to Mainnet + Testnet, interact with it by sentry-cli it
-
-- **Stake Pool course**
+- make sure it stays running in background, consider systemd service
 - Systemd https://www.youtube.com/watch?v=JXIaQevXlvg and https://github.com/DamjanOstrelic/Cardano-stuff
-- Tmux
+- github issue the Untitled section in stake pool school. videos
+- stake pool course videos
 
+- try running docker container / make my own
 - try running a Shelley instead of Byron, which features [cardano-cli shelley system stop - command](https://docs.cardano.org/projects/cardano-node/en/latest/reference/cardano-node-cli-reference.html)
-- try running docker container
-
 - do Exercises from docs.cardano.org
 
 ### Stake Pool
@@ -122,6 +156,9 @@ https://forum.cardano.org/t/need-help-with-cardano-node-operation/44076/4
 [Cardano Staking: Everything You Need to Know About ADA Returns](https://cryptobriefing.com/cardano-staking-ada-returns/)
 
 [How to build a haskell stakepool node - coincashew](https://www.coincashew.com/coins/overview-ada/guide-how-to-build-a-haskell-stakepool-node)
+
+### Upgrade Path
+[backup your binaries](https://cardano-foundation.gitbook.io/stake-pool-course/stake-pool-guide/getting-started/install-node)
 
 ### Other Technical
 [Why Cardano Chose Haskell](https://forum.cardano.org/t/why-cardano-chose-haskell-and-why-you-should-care/43085)
