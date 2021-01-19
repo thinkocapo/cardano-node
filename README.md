@@ -132,11 +132,12 @@ security? vs. use the one that comes with it
 
 ## Next
 
-- make sure it stays running in background, consider systemd service
-- Systemd https://www.youtube.com/watch?v=JXIaQevXlvg and https://github.com/DamjanOstrelic/Cardano-stuff
+- setup systemd service
+    - Systemd https://www.youtube.com/watch?v=JXIaQevXlvg and https://github.com/DamjanOstrelic/Cardano-stuff
+- file server
+
 - github issue the Untitled section in stake pool school. videos
 - stake pool course videos
-
 - try running docker container / make my own
 - try running a Shelley instead of Byron, which features [cardano-cli shelley system stop - command](https://docs.cardano.org/projects/cardano-node/en/latest/reference/cardano-node-cli-reference.html)
 - do Exercises from docs.cardano.org
