@@ -23,6 +23,8 @@ https://developers.cardano.org/ not much
 http://astorpool.org/
 
 ## Setup
+https://docs.cardano.org/projects/cardano-node/en/latest/getting-started/install.html  
+
 In a VM...download the executable (not the [source code from github Releases page](https://github.com/input-output-hk/cardano-node/releases))
 1. wget -c https://hydra.iohk.io/build/5288424/download/1/cardano-node-1.24.2-linux.tar.gz
 2. tar -xzf cardano-node-1.24.2-linux.tar.gz
@@ -40,11 +42,9 @@ git rev 8e0501f4352a00a00330dc7641b1a7583c52e643
 ```
 3. touch state
 
-## Setup - Build from Source
+Change testnet-config.json's `"Protocol": "Cardano"` to `"Protocol": "Tpraos"
 
-https://docs.cardano.org/projects/cardano-node/en/latest/getting-started/install.html  
-
-(PREFERRED)  
+## Setup - Stake Pool Course (Build from Source)
 https://cardano-foundation.gitbook.io/stake-pool-course/stake-pool-guide/getting-started/install-node
 
 ```
@@ -62,12 +62,12 @@ cabal build all # for the first time https://docs.cardano.org/projects/cardano-n
 
 Skip `cabal install all --bindir ~/.local/bin` and run:
 ```
-# check version...
+// check version...
 cp -p dist-newstyle/build/x86_64-linux/ghc-8.10.2/cardano-node-1.24.2/x/cardano-node/build/cardano-node/cardano-node ~/.local/bin/
 cp -p dist-newstyle/build/x86_64-linux/ghc-8.10.2/cardano-cli-1.24.2/x/cardano-cli/build/cardano-cli/cardano-cli ~/.local/bin/
 ```
 
-Change testnet-config.json's `"Protocol": "Cardano"` to `"Protocol": "Tpraos" <-- other way around?
+
 
 ## Run
 ```
@@ -75,12 +75,12 @@ Change testnet-config.json's `"Protocol": "Cardano"` to `"Protocol": "Tpraos" <-
 ./cardano-node run --topology ./configuration/cardano/mainnet-topology.json --database-path ./state --port 3001 --config ./configuration/defaults/byron-mainnet/configuration.yaml --socket-path \\.\pipe\cardano-node
 
 ```
-# testnet setup
+// testnet setup
 change GenesisFile: testnet_genesis.json to GenesisFile: genesis.json
 change protocol in yaml to TPraos, get error There was an error parsing the genesis file: ./configuration/defaults/byron-testnet/genesis.json Error: "Error in $: key \"systemStart\" not found"
 ```
 
-# testnet run
+// testnet run
 ./cardano-node run --topology ./configuration/defaults/byron-testnet/topology.json --database-path ./state --port 3001 --config ./configuration/defaults/byron-testnet/configuration.yaml --socket-path \\.\pipe\cardano-node
 ```
 and test it
@@ -100,6 +100,9 @@ key-pair offline cold
 https://cardano-foundation.gitbook.io/stake-pool-course/stake-pool-guide/getting-started/cli
 https://docs.cardano.org/projects/cardano-node/en/latest/getting-started/cli.html
 
+
+### Stake Pool Course
+cd relay
 
 change testnet-config.json Protocol from TPraos to Cardano
 
