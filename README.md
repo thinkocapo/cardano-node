@@ -43,7 +43,10 @@ git rev 8e0501f4352a00a00330dc7641b1a7583c52e643
 ## Setup - Build from Source
 
 https://docs.cardano.org/projects/cardano-node/en/latest/getting-started/install.html  
-and...  
+
+(PREFERRED)  
+https://cardano-foundation.gitbook.io/stake-pool-course/stake-pool-guide/getting-started/install-node
+
 ```
 PATH=$PATH:/home/thinkocapo/.local/bin or export PATH="~/.local/bin:$PATH"
 export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
@@ -64,15 +67,15 @@ cp -p dist-newstyle/build/x86_64-linux/ghc-8.10.2/cardano-node-1.24.2/x/cardano-
 cp -p dist-newstyle/build/x86_64-linux/ghc-8.10.2/cardano-cli-1.24.2/x/cardano-cli/build/cardano-cli/cardano-cli ~/.local/bin/
 ```
 
-Change testnet-config.json's `"Protocol": "Cardano"` to `"Protocol": "Tpraos"
+Change testnet-config.json's `"Protocol": "Cardano"` to `"Protocol": "Tpraos" <-- other way around?
 
 ## Run
 ```
 # mainnet
 ./cardano-node run --topology ./configuration/cardano/mainnet-topology.json --database-path ./state --port 3001 --config ./configuration/defaults/byron-mainnet/configuration.yaml --socket-path \\.\pipe\cardano-node
 
-# testnet setup
 ```
+# testnet setup
 change GenesisFile: testnet_genesis.json to GenesisFile: genesis.json
 change protocol in yaml to TPraos, get error There was an error parsing the genesis file: ./configuration/defaults/byron-testnet/genesis.json Error: "Error in $: key \"systemStart\" not found"
 ```
@@ -131,7 +134,7 @@ security? vs. use the one that comes with it
 - Q. need run Byron to Shelley script?
 
 ## Next
-
+- graceful shutdown
 - setup systemd service
     - Systemd https://www.youtube.com/watch?v=JXIaQevXlvg and https://github.com/DamjanOstrelic/Cardano-stuff
 - file server
