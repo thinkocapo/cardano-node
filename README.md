@@ -22,7 +22,7 @@ https://developers.cardano.org/ not much
 
 http://astorpool.org/
 
-## Setup
+## Setup (Old))
 https://docs.cardano.org/projects/cardano-node/en/latest/getting-started/install.html  
 
 In a VM...download the executable (not the [source code from github Releases page](https://github.com/input-output-hk/cardano-node/releases))
@@ -44,32 +44,8 @@ git rev 8e0501f4352a00a00330dc7641b1a7583c52e643
 
 Change testnet-config.json's `"Protocol": "Cardano"` to `"Protocol": "Tpraos"
 
-## Setup - Stake Pool Course (Build from Source)
-https://cardano-foundation.gitbook.io/stake-pool-course/stake-pool-guide/getting-started/install-node
 
-```
-PATH=$PATH:/home/thinkocapo/.local/bin or export PATH="~/.local/bin:$PATH"
-export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
-export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH"
-```
-and make sure you 
-```
-cabal clean
-cabal update
-# right before you
-cabal build all # for the first time https://docs.cardano.org/projects/cardano-node/en/latest/getting-started/install.html#build-and-install-the-node  
-```
-
-Skip `cabal install all --bindir ~/.local/bin` and run:
-```
-// check version...
-cp -p dist-newstyle/build/x86_64-linux/ghc-8.10.2/cardano-node-1.24.2/x/cardano-node/build/cardano-node/cardano-node ~/.local/bin/
-cp -p dist-newstyle/build/x86_64-linux/ghc-8.10.2/cardano-cli-1.24.2/x/cardano-cli/build/cardano-cli/cardano-cli ~/.local/bin/
-```
-
-
-
-## Run
+#### Run (Old)
 ```
 # mainnet
 ./cardano-node run --topology ./configuration/cardano/mainnet-topology.json --database-path ./state --port 3001 --config ./configuration/defaults/byron-mainnet/configuration.yaml --socket-path \\.\pipe\cardano-node
@@ -101,7 +77,31 @@ https://cardano-foundation.gitbook.io/stake-pool-course/stake-pool-guide/getting
 https://docs.cardano.org/projects/cardano-node/en/latest/getting-started/cli.html
 
 
-### Stake Pool Course
+## Setup - Stake Pool Course (Build from Source)
+https://cardano-foundation.gitbook.io/stake-pool-course/stake-pool-guide/getting-started/install-node
+
+```
+PATH=$PATH:/home/thinkocapo/.local/bin or export PATH="~/.local/bin:$PATH"
+export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
+export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH"
+```
+and make sure you 
+```
+cabal clean
+cabal update
+// optional - echo 'cabal build all' > build.sh and then nohup ./build.sh
+cabal build
+https://docs.cardano.org/projects/cardano-node/en/latest/getting-started/install.html#build-and-install-the-node  
+```
+
+Skip `cabal install all --bindir ~/.local/bin` and run:
+```
+// check version...
+cp -p dist-newstyle/build/x86_64-linux/ghc-8.10.2/cardano-node-1.24.2/x/cardano-node/build/cardano-node/cardano-node ~/.local/bin/
+cp -p dist-newstyle/build/x86_64-linux/ghc-8.10.2/cardano-cli-1.24.2/x/cardano-cli/build/cardano-cli/cardano-cli ~/.local/bin/
+```
+
+### Run - Stake Pool Course
 cd relay
 
 change testnet-config.json Protocol from TPraos to Cardano
@@ -131,19 +131,37 @@ WARNING: The "shelley" subcommand is now deprecated and will be removed in the f
 
 ## Questions
 - Q. Building from Source vs Download Executable vs Docker. put some discussion here for onlookers.
-- Q. Basic Monitoring, `ps fjx`, Prometheus, script's benchmarking.
 - Q. why would you want to 'The Byron genesis generation operations will create a directory that contains:'
 security? vs. use the one that comes with it
 - Q. need run Byron to Shelley script?
 
 ## Next
-- graceful shutdown
-- setup systemd service
-    - Systemd https://www.youtube.com/watch?v=JXIaQevXlvg and https://github.com/DamjanOstrelic/Cardano-stuff
-- file server
+- machineimage/snapshot after relay config files
+
+- MONITOR'ing
+    ps fjx
+    Prometheus
+    script's benchmarking
+- RUN - run node
+    run node
+    new terminal in cardano-cli
+    run node, in background somehowm, write output somewhere
+- MONITOR - disk space, after running once...
+
+- SSH TO VM
+https://cloud.google.com/compute/docs/instances/connecting-advanced  
+https://cloud.google.com/compute/docs/instances/connecting-advanced#provide-key  
+
+- GRACEFUL SHUTDOWN
+    - Setup systemd service (start/stop, or restart)
+    - Systemd
+       https://www.youtube.com/watch?v=JXIaQevXlvg  
+       https://github.com/DamjanOstrelic/Cardano-stuff
+- RASPBERRY PI
+
+- STAKE POOL COURSE
 
 - github issue the Untitled section in stake pool school. videos
-- stake pool course videos
 - try running docker container / make my own
 - try running a Shelley instead of Byron, which features [cardano-cli shelley system stop - command](https://docs.cardano.org/projects/cardano-node/en/latest/reference/cardano-node-cli-reference.html)
 - do Exercises from docs.cardano.org
@@ -202,3 +220,4 @@ https://cardano.org/
 
 https://emurgo.io/
 
+N2 type. $24 -> $57
