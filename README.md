@@ -82,8 +82,11 @@ https://cardano-foundation.gitbook.io/stake-pool-course/stake-pool-guide/getting
 
 ```
 PATH=$PATH:/home/thinkocapo/.local/bin or export PATH="~/.local/bin:$PATH"
+
 export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
 export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH"
+
+export CARDANO_NODE_SOCKET_PATH=~/relay/db/node.socket
 ```
 and make sure you 
 ```
