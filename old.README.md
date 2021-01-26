@@ -43,3 +43,64 @@ So I built this tutorial because all of that was not readily apparent to me and 
 Here is the (Issue)[https://github.com/input-output-hk/cardano-sl/issues/2212] and (PR)[https://github.com/input-output-hk/cardano-sl/pull/2186/commits/c0395e6892140e5bd12d881b2b880429c9f81698] that explains why you need to do this
 
 *** error you'll get would be `cardano-node-simple: MissingSystemStartTime`
+
+
+
+
+# Old Readme
+01/26/2021
+
+
+## Setup (Old))
+https://docs.cardano.org/projects/cardano-node/en/latest/getting-started/install.html  
+
+In a VM...download the executable (not the [source code from github Releases page](https://github.com/input-output-hk/cardano-node/releases))
+1. wget -c https://hydra.iohk.io/build/5288424/download/1/cardano-node-1.24.2-linux.tar.gz
+2. tar -xzf cardano-node-1.24.2-linux.tar.gz
+```
+# Gives the following executables and some config/log dirs
+ls
+cardano-cli  cardano-node  cardano-node-chairman  cardano-testnet  configuration  logs
+
+cardano-cli 1.24.2 - linux-x86_64 - ghc-8.10
+git rev 8e0501f4352a00a00330dc7641b1a7583c52e643
+
+./cardano-node --version
+cardano-node 1.24.2 - linux-x86_64 - ghc-8.10
+git rev 8e0501f4352a00a00330dc7641b1a7583c52e643
+```
+3. touch state
+
+Change testnet-config.json's `"Protocol": "Cardano"` to `"Protocol": "Tpraos"
+
+
+#### Run (Old)
+```
+# mainnet
+./cardano-node run --topology ./configuration/cardano/mainnet-topology.json --database-path ./state --port 3001 --config ./configuration/defaults/byron-mainnet/configuration.yaml --socket-path \\.\pipe\cardano-node
+
+```
+// testnet setup
+change GenesisFile: testnet_genesis.json to GenesisFile: genesis.json
+change protocol in yaml to TPraos, get error There was an error parsing the genesis file: ./configuration/defaults/byron-testnet/genesis.json Error: "Error in $: key \"systemStart\" not found"
+```
+
+// testnet run
+./cardano-node run --topology ./configuration/defaults/byron-testnet/topology.json --database-path ./state --port 3001 --config ./configuration/defaults/byron-testnet/configuration.yaml --socket-path \\.\pipe\cardano-node
+```
+and test it
+```
+export CARDANO_NODE_SOCKET_PATH=\\.\pipe\cardano-node
+./cardano-cli byron query get-tip --mainnet
+./cardano-cli query get-tip --mainnet
+```
+
+key-pair stake  
+key-pair address   
+payment address  
+stake address  
+https://docs.cardano.org/projects/cardano-node/en/latest/stake-pool-operations/keys_and_addresses.html
+
+key-pair offline cold
+https://cardano-foundation.gitbook.io/stake-pool-course/stake-pool-guide/getting-started/cli
+https://docs.cardano.org/projects/cardano-node/en/latest/getting-started/cli.html
