@@ -22,60 +22,6 @@ https://developers.cardano.org/ not much
 
 http://astorpool.org/
 
-## Setup (Old))
-https://docs.cardano.org/projects/cardano-node/en/latest/getting-started/install.html  
-
-In a VM...download the executable (not the [source code from github Releases page](https://github.com/input-output-hk/cardano-node/releases))
-1. wget -c https://hydra.iohk.io/build/5288424/download/1/cardano-node-1.24.2-linux.tar.gz
-2. tar -xzf cardano-node-1.24.2-linux.tar.gz
-```
-# Gives the following executables and some config/log dirs
-ls
-cardano-cli  cardano-node  cardano-node-chairman  cardano-testnet  configuration  logs
-
-cardano-cli 1.24.2 - linux-x86_64 - ghc-8.10
-git rev 8e0501f4352a00a00330dc7641b1a7583c52e643
-
-./cardano-node --version
-cardano-node 1.24.2 - linux-x86_64 - ghc-8.10
-git rev 8e0501f4352a00a00330dc7641b1a7583c52e643
-```
-3. touch state
-
-Change testnet-config.json's `"Protocol": "Cardano"` to `"Protocol": "Tpraos"
-
-
-#### Run (Old)
-```
-# mainnet
-./cardano-node run --topology ./configuration/cardano/mainnet-topology.json --database-path ./state --port 3001 --config ./configuration/defaults/byron-mainnet/configuration.yaml --socket-path \\.\pipe\cardano-node
-
-```
-// testnet setup
-change GenesisFile: testnet_genesis.json to GenesisFile: genesis.json
-change protocol in yaml to TPraos, get error There was an error parsing the genesis file: ./configuration/defaults/byron-testnet/genesis.json Error: "Error in $: key \"systemStart\" not found"
-```
-
-// testnet run
-./cardano-node run --topology ./configuration/defaults/byron-testnet/topology.json --database-path ./state --port 3001 --config ./configuration/defaults/byron-testnet/configuration.yaml --socket-path \\.\pipe\cardano-node
-```
-and test it
-```
-export CARDANO_NODE_SOCKET_PATH=\\.\pipe\cardano-node
-./cardano-cli byron query get-tip --mainnet
-./cardano-cli query get-tip --mainnet
-```
-
-key-pair stake  
-key-pair address   
-payment address  
-stake address  
-https://docs.cardano.org/projects/cardano-node/en/latest/stake-pool-operations/keys_and_addresses.html
-
-key-pair offline cold
-https://cardano-foundation.gitbook.io/stake-pool-course/stake-pool-guide/getting-started/cli
-https://docs.cardano.org/projects/cardano-node/en/latest/getting-started/cli.html
-
 
 ## Setup - Stake Pool Course (Build from Source)
 https://cardano-foundation.gitbook.io/stake-pool-course/stake-pool-guide/getting-started/install-node
@@ -131,6 +77,71 @@ WARNING: The "shelley" subcommand is now deprecated and will be removed in the f
     "slotNo": 325881
 }
 ```
+note - continues running after X'ing out the terminal, so may not need `nohup ./run.sh &`
+note - HOWEVER using `nohup` gives you a nohup.out
+
+8:06p nohup, then `free`, keep seeing available disk decline...
+
+tail -f nohup.out
+killall cardano-node
+
+## Monitor & SHUTDOWN
+CPU | RAM | Disk Space  
+`df -h`  
+`htop`  
+
+`free`  and https://www.binarytides.com/linux-command-check-memory-usage/
+```
+free -h
+free -s 3
+```
+
+TRY `df -h` too!
+
+On a log file...
+```
+tail -f nohup.out
+```
+
+size of db...
+```
+du -h
+```
+Prometheus/Grafana https://forum.cardano.org/t/cardano-stake-pool-monitoring-with-prometheus-grafana/38047  
+
+scripts benchmarking
+
+
+killall cardano-node
+
+
+## Next
+- 24GB HD
+- MONITOR'ing basics?
+    COMES WITH TMUX - SET THAT UP
+- RUN node
+    tmux monitor the ls, du, dh,
+    `rm nohup.out` after build but before running
+    `tail -f /logs`
+
+- SSH TO VM
+https://cloud.google.com/compute/docs/instances/connecting-advanced  
+https://cloud.google.com/compute/docs/instances/connecting-advanced#provide-key  
+
+
+
+- GRACEFUL SHUTDOWN
+    - Setup systemd service (start/stop, or restart)
+    - Systemd
+       https://www.youtube.com/watch?v=JXIaQevXlvg  
+       https://github.com/DamjanOstrelic/Cardano-stuff  
+       https://forum.cardano.org/t/systemd-service-file-for-cardano-node/33490/8
+- STAKE POOL COURSE
+- RASPBERRY PI
+- github issue the Untitled section in stake pool school. videos
+- try running docker container / make my own
+- try running a Shelley instead of Byron, which features [cardano-cli shelley system stop - command](https://docs.cardano.org/projects/cardano-node/en/latest/reference/cardano-node-cli-reference.html)
+- do Exercises from docs.cardano.org
 
 ## Questions
 - Q. Building from Source vs Download Executable vs Docker. put some discussion here for onlookers.
@@ -138,36 +149,6 @@ WARNING: The "shelley" subcommand is now deprecated and will be removed in the f
 security? vs. use the one that comes with it
 - Q. need run Byron to Shelley script?
 
-## Next
-- machineimage/snapshot after relay config files
-
-- MONITOR'ing
-    ps fjx
-    Prometheus
-    script's benchmarking
-- RUN - run node
-    run node
-    new terminal in cardano-cli
-    run node, in background somehowm, write output somewhere
-- MONITOR - disk space, after running once...
-
-- SSH TO VM
-https://cloud.google.com/compute/docs/instances/connecting-advanced  
-https://cloud.google.com/compute/docs/instances/connecting-advanced#provide-key  
-
-- GRACEFUL SHUTDOWN
-    - Setup systemd service (start/stop, or restart)
-    - Systemd
-       https://www.youtube.com/watch?v=JXIaQevXlvg  
-       https://github.com/DamjanOstrelic/Cardano-stuff
-- RASPBERRY PI
-
-- STAKE POOL COURSE
-
-- github issue the Untitled section in stake pool school. videos
-- try running docker container / make my own
-- try running a Shelley instead of Byron, which features [cardano-cli shelley system stop - command](https://docs.cardano.org/projects/cardano-node/en/latest/reference/cardano-node-cli-reference.html)
-- do Exercises from docs.cardano.org
 
 ### Stake Pool
 [Staking and delegating for beginners - forum.cardano.org](https://forum.cardano.org/t/staking-and-delegating-for-beginners-a-step-by-step-guide/36681)
@@ -213,6 +194,8 @@ https://docs.cardano.org/en/latest/explore-cardano/cardano-network.html
 https://medium.com/@contact_73710/a-non-technical-guide-for-running-a-stake-pool-part-1-a9071022d125
 
 https://docs.cardano.org/projects/cardano-node/en/latest/getting-started/install.html
+
+https://iohk.zendesk.com/hc/en-us/articles/900001219843-What-are-Block-producing-nodes-and-relay-nodes
 
 ### Organizations & Events
 https://cardanosummit.iohk.io/
