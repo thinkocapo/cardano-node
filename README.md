@@ -77,7 +77,7 @@ cp -p dist-newstyle/build/x86_64-linux/ghc-8.10.2/cardano-cli-1.24.2/x/cardano-c
 Follow the mkdir relay steps...
 
 ### Run - Stake Pool Course
-change testnet-config.json Protocol from TPraos to Cardano
+Make sure testnet-config.json' Protocol is set to Cardano and not TPraos
 
 ```
 cd relay
@@ -88,6 +88,9 @@ cardano-node run \
  --host-addr 0.0.0.0 \
  --port 3001 \
  --config testnet-config.json
+
+// or 
+nohup ./run.sh >& /dev/null &
 ```
 
 open a new terminal session and:
@@ -233,3 +236,6 @@ https://emurgo.io/
 
 N2 type. $24 -> $57
 
+
+`ps fjx`
+![HealthyRunningNode](./img/healthy-running-node.png)
