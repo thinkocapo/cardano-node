@@ -24,10 +24,20 @@ http://astorpool.org/
 
 
 ## Setup - Stake Pool Course (Build from Source)
-https://cardano-foundation.gitbook.io/stake-pool-course/stake-pool-guide/getting-started/install-node
+Instructions:  
+https://cardano-foundation.gitbook.io/stake-pool-course/stake-pool-guide/getting-started/install-node  
+
+https://docs.cardano.org/projects/cardano-node/en/latest/getting-started/install.html#build-and-install-the-node  
+
+#### Machine
+2 CPU  
+8GB RAM per [release 1.24.2](https://github.com/input-output-hk/cardano-node/releases)
+24GB SSD  
+Ubuntu 20.04 LTS  
+
 
 ```
-PATH=$PATH:/home/thinkocapo/.local/bin or export PATH="~/.local/bin:$PATH"
+export PATH="~/.local/bin:$PATH"
 
 export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
 export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH"
@@ -38,9 +48,23 @@ and make sure you
 ```
 cabal clean
 cabal update
-// optional - echo 'cabal build all' > build.sh and then nohup ./build.sh
-cabal build
-https://docs.cardano.org/projects/cardano-node/en/latest/getting-started/install.html#build-and-install-the-node  
+
+touch build.sh
+vim build.sh
+    cabal build
+chmod u+x build.sh
+
+NOOOO nohup ./build.sh &
+nohup ./build.sh >/dev/null 2>&1 &
+
+https://stackoverflow.com/questions/10408816/how-do-i-use-the-nohup-command-without-getting-nohup-out
+
+
+
+https://unix.stackexchange.com/questions/23010/how-to-make-nohup-not-create-any-output-files-and-so-not-eat-all-space says:
+nohup ./build.sh >& /dev/null &
+
+
 ```
 
 Skip `cabal install all --bindir ~/.local/bin` and run:
@@ -50,12 +74,13 @@ cp -p dist-newstyle/build/x86_64-linux/ghc-8.10.2/cardano-node-1.24.2/x/cardano-
 cp -p dist-newstyle/build/x86_64-linux/ghc-8.10.2/cardano-cli-1.24.2/x/cardano-cli/build/cardano-cli/cardano-cli ~/.local/bin/
 ```
 
-### Run - Stake Pool Course
-cd relay
+Follow the mkdir relay steps...
 
-change testnet-config.json Protocol from TPraos to Cardano
+### Run - Stake Pool Course
+Make sure testnet-config.json' Protocol is set to Cardano and not TPraos
 
 ```
+cd relay
 cardano-node run \
  --topology testnet-topology.json \
  --database-path db \
@@ -63,6 +88,9 @@ cardano-node run \
  --host-addr 0.0.0.0 \
  --port 3001 \
  --config testnet-config.json
+
+// or 
+nohup ./run.sh >& /dev/null &
 ```
 
 open a new terminal session and:
@@ -207,3 +235,7 @@ https://cardano.org/
 https://emurgo.io/
 
 N2 type. $24 -> $57
+
+
+`ps fjx`
+![HealthyRunningNode](./img/healthy-running-node.png)
