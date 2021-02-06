@@ -144,39 +144,20 @@ killall cardano-node
 
 
 ## Next
-- 24GB HD
-- MONITOR'ing basics?
-    COMES WITH TMUX - SET THAT UP
+- MONITOR'ing basics
+    VM COMES WITH TMUX - SET THAT UP
 - RUN node
     tmux monitor the ls, du, dh,
     `rm nohup.out` after build but before running
     `tail -f /logs`
-
-- SSH TO VM
-https://cloud.google.com/compute/docs/instances/connecting-advanced  
-https://cloud.google.com/compute/docs/instances/connecting-advanced#provide-key  
-
-
-
-- GRACEFUL SHUTDOWN
+- Update docs for 8GB Memory, 24GB SSD
+- 1.25.1
+- Graceful Shutdown
     - Setup systemd service (start/stop, or restart)
     - Systemd
        https://www.youtube.com/watch?v=JXIaQevXlvg  
        https://github.com/DamjanOstrelic/Cardano-stuff  
        https://forum.cardano.org/t/systemd-service-file-for-cardano-node/33490/8
-- STAKE POOL COURSE
-- RASPBERRY PI
-- github issue the Untitled section in stake pool school. videos
-- try running docker container / make my own
-- try running a Shelley instead of Byron, which features [cardano-cli shelley system stop - command](https://docs.cardano.org/projects/cardano-node/en/latest/reference/cardano-node-cli-reference.html)
-- do Exercises from docs.cardano.org
-
-## Questions
-- Q. Building from Source vs Download Executable vs Docker. put some discussion here for onlookers.
-- Q. why would you want to 'The Byron genesis generation operations will create a directory that contains:'
-security? vs. use the one that comes with it
-- Q. need run Byron to Shelley script?
-
 
 ### Stake Pool
 [Staking and delegating for beginners - forum.cardano.org](https://forum.cardano.org/t/staking-and-delegating-for-beginners-a-step-by-step-guide/36681)
