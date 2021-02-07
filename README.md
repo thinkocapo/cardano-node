@@ -18,7 +18,7 @@ https://github.com/input-output-hk/cardano-node/releases full project
 > "This effort aims to provide the best-possible container image for Cardano"  
 It uses https://hub.docker.com/r/nessusio/cardano and [Dockerfile](https://github.com/tdiesler/nessus-cardano/blob/master/node/docker/Dockerfile)
 
-https://developers.cardano.org/ not much
+https://developers.cardano.org/ 
 
 http://astorpool.org/
 
@@ -54,30 +54,70 @@ vim build.sh
     cabal build
 chmod u+x build.sh
 
-NOOOO nohup ./build.sh &
+Do not nohup ./build.sh &
 nohup ./build.sh >/dev/null 2>&1 &
 
 https://stackoverflow.com/questions/10408816/how-do-i-use-the-nohup-command-without-getting-nohup-out
 
-
-
 https://unix.stackexchange.com/questions/23010/how-to-make-nohup-not-create-any-output-files-and-so-not-eat-all-space says:
 nohup ./build.sh >& /dev/null &
 
-
 ```
 
-Skip `cabal install all --bindir ~/.local/bin` and run:
+
 ```
-// check version...
-cp -p dist-newstyle/build/x86_64-linux/ghc-8.10.2/cardano-node-1.24.2/x/cardano-node/build/cardano-node/cardano-node ~/.local/bin/
-cp -p dist-newstyle/build/x86_64-linux/ghc-8.10.2/cardano-cli-1.24.2/x/cardano-cli/build/cardano-cli/cardano-cli ~/.local/bin/
+// 02/07/2021 1.25.1
+cp -p dist-newstyle/build/x86_64-linux/ghc-8.10.2/cardano-node-1.25.1/x/cardano-node/build/cardano-node/cardano-node ~/.local/bin/
+cp -p dist-newstyle/build/x86_64-linux/ghc-8.10.2/cardano-cli-1.25.1/x/cardano-cli/build/cardano-cli/cardano-cli ~/.local/bin/
 ```
+
+
 
 Follow the mkdir relay steps...
 
-### Run - Stake Pool Course
-Make sure testnet-config.json' Protocol is set to Cardano and not TPraos
+## Run - Stake Pooler Course - Operations
+`mkdir ~/keys` and follow  [instructions](https://cardano-foundation.gitbook.io/stake-pool-course/stake-pool-guide/stake-pool-operations/keys_and_addresses)
+
+vkey verification key
+skey signing key
+
+^ use these to make a payment address
+
+Check balance at the address
+```
+cardano-cli query utxo \
+--mary-era \
+--address $(cat payment.addr) \
+--testnet-magic 1097911063
+```
+
+1. Get test ADA from the faucet:  
+https://developers.cardano.org/en/testnets/cardano/tools/faucet/
+
+2.
+```
+Success
+Your transaction has been successful and 1000 ADA have been sent to addr_test1vqmn9dphgt5df90y34evf8jgv7ukl7rllwyhd06q55azsfs2v9ekv.
+
+Please verify the following transaction hash:
+
+9c010b50cfacc0530aff9a100d30cb13511adb9cefc73711c1439681e400c925
+```
+
+verified on cardano testnet explorer:  
+https://explorer.cardano-testnet.iohkdev.io/en/transaction?id=9c010b50cfacc0530aff9a100d30cb13511adb9cefc73711c1439681e400c925
+
+re-run `cardano-cli query utxo` to check.
+
+
+3. When you have finished using your test tokens, please return them to the faucet so that other members of the community can use them. Please return your test tokens to this address:
+```
+addr_test1qqr585tvlc7ylnqvz8pyqwauzrdu0mxag3m7q56grgmgu7sxu2hyfhlkwuxupa9d5085eunq2qywy7hvmvej456flknswgndm3
+```
+
+
+## Run - Stake Pool Course
+Make sure the Protocol in `testnet-config.json` is set to Cardano and not TPraos
 
 ```
 cd relay
@@ -89,26 +129,36 @@ cardano-node run \
  --port 3001 \
  --config testnet-config.json
 
-// or 
+// or, Tested, does not create nohup.out file that will suck up all your disk space 
 nohup ./run.sh >& /dev/null &
 ```
 
 open a new terminal session and:
 
-`export CARDANO_NODE_SOCKET_PATH=~/relay/db/node.socket`  
 ```
-thinkocapo@dev-1:~/relay$ cardano-cli shelley query tip --testnet-magic 1097911063
-WARNING: The "shelley" subcommand is now deprecated and will be removed in the future. Please use the top-level commands instead.
+cardano-cli shelley query tip --testnet-magic 1097911063
+```
+output:  
+```
 {
     "blockNo": 324839,
     "headerHash": "2aa319360e076b263e3f6b2b5772ca3d6d6bd9e206bb3c3a7624e6a8c4fb3358",
     "slotNo": 325881
 }
 ```
-note - continues running after X'ing out the terminal, so may not need `nohup ./run.sh &`
-note - HOWEVER using `nohup` gives you a nohup.out
 
-8:06p nohup, then `free`, keep seeing available disk decline...
+```
+cardano-cli get-tip --testnet-magic 1097911063
+```
+output:
+```
+Current tip: 
+Block hash: 9241cb65e1218f8b0cabeba899d9ad560eaa871ad3f1ca5bc115119d874bc898
+Slot: 18342960
+Block number: 2298369
+```
+
+`free` to see disk space
 
 tail -f nohup.out
 killall cardano-node
@@ -142,23 +192,27 @@ scripts benchmarking
 
 killall cardano-node
 
+### Upgrade Path
+[backup your binaries](https://cardano-foundation.gitbook.io/stake-pool-course/stake-pool-guide/getting-started/install-node)
+
+```
+cd cardano-node
+git fetch --all --tags
+git tag
+git checkout tags/<the-tag-you-want>
+cabal update
+cabal build cardano-node cardano-cli
+```
+So not `cabal build all`. I did cabal build all and it worked fine.
 
 ## Next
-- MONITOR'ing basics
-    VM COMES WITH TMUX - SET THAT UP
-- RUN node
-    tmux monitor the ls, du, dh,
-    `rm nohup.out` after build but before running
-    `tail -f /logs`
-- Update docs for 8GB Memory, 24GB SSD
-- 1.25.1
 - Graceful Shutdown
     - Setup systemd service (start/stop, or restart)
     - Systemd
        https://www.youtube.com/watch?v=JXIaQevXlvg  
        https://github.com/DamjanOstrelic/Cardano-stuff  
        https://forum.cardano.org/t/systemd-service-file-for-cardano-node/33490/8
-
+       
 ### Stake Pool
 [Staking and delegating for beginners - forum.cardano.org](https://forum.cardano.org/t/staking-and-delegating-for-beginners-a-step-by-step-guide/36681)
 
@@ -174,9 +228,6 @@ https://forum.cardano.org/t/need-help-with-cardano-node-operation/44076/4
 [Cardano Staking: Everything You Need to Know About ADA Returns](https://cryptobriefing.com/cardano-staking-ada-returns/)
 
 [How to build a haskell stakepool node - coincashew](https://www.coincashew.com/coins/overview-ada/guide-how-to-build-a-haskell-stakepool-node)
-
-### Upgrade Path
-[backup your binaries](https://cardano-foundation.gitbook.io/stake-pool-course/stake-pool-guide/getting-started/install-node)
 
 ### Other Technical
 [Why Cardano Chose Haskell](https://forum.cardano.org/t/why-cardano-chose-haskell-and-why-you-should-care/43085)
@@ -205,6 +256,8 @@ https://medium.com/@contact_73710/a-non-technical-guide-for-running-a-stake-pool
 https://docs.cardano.org/projects/cardano-node/en/latest/getting-started/install.html
 
 https://iohk.zendesk.com/hc/en-us/articles/900001219843-What-are-Block-producing-nodes-and-relay-nodes
+
+https://developers.cardano.org/en/testnets/cardano/tools/staking-calculator/
 
 ### Organizations & Events
 https://cardanosummit.iohk.io/
