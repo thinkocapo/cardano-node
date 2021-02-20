@@ -1,27 +1,10 @@
-### Documentation & Forum
 
-https://docs.cardano.org/projects/cardano-node/en/latest/index.html
-https://docs.cardano.org/projects/cardano-node/en/latest/getting-started/understanding-config-files.html
-https://docs.cardano.org/projects/cardano-node/en/latest/getting-started/cli.html
-
-https://forum.cardano.org/
+https://docs.cardano.org  
+https://developers.cardano.org/en/  
+https://forum.cardano.org/  
 
 ## Download
 [Installing the node from source](https://docs.cardano.org/projects/cardano-node/en/latest/getting-started/install.html)
-
-https://hydra.iohk.io/build/5288424 executable  
-https://github.com/input-output-hk/cardano-node/releases full project
-
-[Docker cardano-node](https://hub.docker.com/r/inputoutput/cardano-node)  
-[Docker nessus-cardano](https://github.com/tdiesler/nessus-cardano)  
-
-> "This effort aims to provide the best-possible container image for Cardano"  
-It uses https://hub.docker.com/r/nessusio/cardano and [Dockerfile](https://github.com/tdiesler/nessus-cardano/blob/master/node/docker/Dockerfile)
-
-https://developers.cardano.org/ 
-
-http://astorpool.org/
-
 
 ## Setup - Stake Pool Course (Build from Source)
 Instructions:  
@@ -35,16 +18,14 @@ https://docs.cardano.org/projects/cardano-node/en/latest/getting-started/install
 24GB SSD  
 Ubuntu 20.04 LTS  
 
-
 ```
 export PATH="~/.local/bin:$PATH"
-
 export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
 export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH"
-
 export CARDANO_NODE_SOCKET_PATH=~/relay/db/node.socket
+export MAGIC=1097911063
 ```
-and make sure you 
+and  
 ```
 cabal clean
 cabal update
@@ -56,14 +37,7 @@ chmod u+x build.sh
 
 Do not nohup ./build.sh &
 nohup ./build.sh >/dev/null 2>&1 &
-
-https://stackoverflow.com/questions/10408816/how-do-i-use-the-nohup-command-without-getting-nohup-out
-
-https://unix.stackexchange.com/questions/23010/how-to-make-nohup-not-create-any-output-files-and-so-not-eat-all-space says:
-nohup ./build.sh >& /dev/null &
-
 ```
-
 
 ```
 // 02/07/2021 1.25.1
@@ -71,50 +45,7 @@ cp -p dist-newstyle/build/x86_64-linux/ghc-8.10.2/cardano-node-1.25.1/x/cardano-
 cp -p dist-newstyle/build/x86_64-linux/ghc-8.10.2/cardano-cli-1.25.1/x/cardano-cli/build/cardano-cli/cardano-cli ~/.local/bin/
 ```
 
-
-
-Follow the mkdir relay steps...
-
-## Run - Stake Pooler Course - Operations
-`mkdir ~/keys` and follow  [instructions](https://cardano-foundation.gitbook.io/stake-pool-course/stake-pool-guide/stake-pool-operations/keys_and_addresses)
-
-vkey verification key
-skey signing key
-
-^ use these to make a payment address
-
-Check balance at the address
-```
-cardano-cli query utxo \
---mary-era \
---address $(cat payment.addr) \
---testnet-magic 1097911063
-```
-
-1. Get test ADA from the faucet:  
-https://developers.cardano.org/en/testnets/cardano/tools/faucet/
-
-2.
-```
-Success
-Your transaction has been successful and 1000 ADA have been sent to addr_test1vqmn9dphgt5df90y34evf8jgv7ukl7rllwyhd06q55azsfs2v9ekv.
-
-Please verify the following transaction hash:
-
-9c010b50cfacc0530aff9a100d30cb13511adb9cefc73711c1439681e400c925
-```
-
-verified on cardano testnet explorer:  
-https://explorer.cardano-testnet.iohkdev.io/en/transaction?id=9c010b50cfacc0530aff9a100d30cb13511adb9cefc73711c1439681e400c925
-
-re-run `cardano-cli query utxo` to check.
-
-
-3. When you have finished using your test tokens, please return them to the faucet so that other members of the community can use them. Please return your test tokens to this address:
-```
-addr_test1qqr585tvlc7ylnqvz8pyqwauzrdu0mxag3m7q56grgmgu7sxu2hyfhlkwuxupa9d5085eunq2qywy7hvmvej456flknswgndm3
-```
-
+[Cardano Configurations](https://hydra.iohk.io/build/5102327/download/1/index.html)
 
 ## Run - Stake Pool Course
 Make sure the Protocol in `testnet-config.json` is set to Cardano and not TPraos
@@ -163,7 +94,112 @@ Block number: 2298369
 tail -f nohup.out
 killall cardano-node
 
-## Monitor & SHUTDOWN
+## Run - Stake Pool Course - Make vkey skey and address
+`mkdir ~/keys` and follow  [instructions](https://cardano-foundation.gitbook.io/stake-pool-course/stake-pool-guide/stake-pool-operations/keys_and_addresses)
+
+vkey verification key
+skey signing key
+
+^ use these to make a payment address
+
+Check balance at the address
+```
+cardano-cli query utxo \
+--mary-era \
+--address $(cat payment.addr) \
+--testnet-magic 1097911063
+```
+
+`cardano-cli get-tip --testnet-magic $MAGIC`
+
+1. Get test ADA from the faucet:  
+https://developers.cardano.org/en/testnets/cardano/tools/faucet/
+
+2.
+```
+Success
+Your transaction has been successful and 1000 ADA have been sent to addr_test1vqmn9dphgt5df90y34evf8jgv7ukl7rllwyhd06q55azsfs2v9ekv.
+
+Please verify the following transaction hash:
+
+9c010b50cfacc0530aff9a100d30cb13511adb9cefc73711c1439681e400c925
+```
+
+verified on cardano testnet explorer:  
+https://explorer.cardano-testnet.iohkdev.io/en/transaction?id=9c010b50cfacc0530aff9a100d30cb13511adb9cefc73711c1439681e400c925
+
+re-run `cardano-cli query utxo` to check.
+
+
+3. When you have finished using your test tokens, please return them to the faucet so that other members of the community can use them. Please return your test tokens to this address:
+```
+addr_test1qqr585tvlc7ylnqvz8pyqwauzrdu0mxag3m7q56grgmgu7sxu2hyfhlkwuxupa9d5085eunq2qywy7hvmvej456flknswgndm3
+```
+
+## Generate transaction
+Make protocol params in protocol.json
+```
+   cardano-cli query protocol-parameters \
+   --mary-era \
+   --testnet-magic 1097911063 \
+   --out-file protocol.json
+```
+
+Get the latest SlotNo.
+```
+cardano-cli query tip --testnet-magic 1097911063
+```
+1 slot per second, and need 20 minutes, so add 1200 to the SlotNo.
+18363437 becomes 18364637
+
+```
+// Get the TxId (index#1)
+cardano-cli query utxo \
+--mary-era \
+--address $(cat payment.addr) \
+--testnet-magic 1097911063
+
+// Build Tx - Paste the transaction hash into --tx-in:  
+cardano-cli transaction build-raw \ 
+--tx-in 9c010b50cfacc0530aff9a100d30cb13511adb9cefc73711c1439681e400c925#1 \ 
+--tx-out $(cat payment2.addr)+100000000 \ 
+--tx-out $(cat payment.addr)+0 \ 
+--ttl 0 \ 
+--fee 0 \ 
+--out-file tx.raw
+```
+```
+// Syntax that worked
+cardano-cli transaction build-raw --tx-in 9c010b50cfacc0530aff9a100d30cb13511adb9cefc73711c1439681e400c925#1 --tx-out $(cat payment2.addr)+100000000 --tx-out $(cat payment.addr)+0 --ttl 0 --fee 0 --out-file tx.raw
+```
+Generates tx.raw
+
+Build Tx w/ fee
+cardano-cli transaction build-raw \
+--tx-in 9c010b50cfacc0530aff9a100d30cb13511adb9cefc73711c1439681e400c925#1 \
+--tx-out $(cat payment2.addr)+100000000 \
+--tx-out $(cat payment.addr)+899825567 \
+--ttl 18364637 \
+--fee 174433 \
+--out-file tx.raw
+
+cardano-cli transaction sign \
+--tx-body-file tx.raw \
+--signing-key-file payment.skey \
+--testnet-magic 1097911063 \
+--out-file tx.signed
+
+cardano-cli transaction submit \
+        --tx-file tx.signed \
+        --testnet-magic 1097911063
+
+        cardano-cli transaction submit \
+        --tx-file tx.signed \
+        --testnet-magic 42
+
+## Monitor & Shutdown
+Prometheus and EKG (haskel)  
+
 CPU | RAM | Disk Space  
 `df -h`  
 `htop`  
@@ -189,7 +225,6 @@ Prometheus/Grafana https://forum.cardano.org/t/cardano-stake-pool-monitoring-wit
 
 scripts benchmarking
 
-
 killall cardano-node
 
 ### Upgrade Path
@@ -205,15 +240,7 @@ cabal build cardano-node cardano-cli
 ```
 So not `cabal build all`. I did cabal build all and it worked fine.
 
-## Next
-- Graceful Shutdown
-    - Setup systemd service (start/stop, or restart)
-    - Systemd
-       https://www.youtube.com/watch?v=JXIaQevXlvg  
-       https://github.com/DamjanOstrelic/Cardano-stuff  
-       https://forum.cardano.org/t/systemd-service-file-for-cardano-node/33490/8
-       
-### Stake Pool
+### Stake Pool Documentation
 [Staking and delegating for beginners - forum.cardano.org](https://forum.cardano.org/t/staking-and-delegating-for-beginners-a-step-by-step-guide/36681)
 
 https://cardano-community.github.io/guild-operators/#/
@@ -246,18 +273,24 @@ Plutus Core is a compilation target, yet https://prod.playground.plutus.iohkdev.
 
 [Delegating in Daedalus - VIDEO](https://www.youtube.com/watch?v=VtkjM_0k4R0&feature=emb_logo)
 
+https://docs.cardano.org/en/latest/getting-started/stake-pool-operators/  
+https://docs.cardano.org/en/latest/explore-cardano/cardano-network.html  
+https://medium.com/@contact_73710/a-non-technical-guide-for-running-a-stake-pool-part-1-a9071022d125  
+https://docs.cardano.org/projects/cardano-node/en/latest/getting-started/install.html  
+https://iohk.zendesk.com/hc/en-us/articles/900001219843-What-are-Block-producing-nodes-and-relay-nodes  
+https://developers.cardano.org/en/testnets/cardano/tools/staking-calculator/  
 
-https://docs.cardano.org/en/latest/getting-started/stake-pool-operators/
+## Additional Ways to Get Up and Running
+https://hydra.iohk.io/build/5288424 executable  
+https://github.com/input-output-hk/cardano-node/releases full project
 
-https://docs.cardano.org/en/latest/explore-cardano/cardano-network.html
+[Docker cardano-node](https://hub.docker.com/r/inputoutput/cardano-node)  
+[Docker nessus-cardano](https://github.com/tdiesler/nessus-cardano)  
 
-https://medium.com/@contact_73710/a-non-technical-guide-for-running-a-stake-pool-part-1-a9071022d125
+> "This effort aims to provide the best-possible container image for Cardano"  
+It uses https://hub.docker.com/r/nessusio/cardano and [Dockerfile](https://github.com/tdiesler/nessus-cardano/blob/master/node/docker/Dockerfile)
 
-https://docs.cardano.org/projects/cardano-node/en/latest/getting-started/install.html
-
-https://iohk.zendesk.com/hc/en-us/articles/900001219843-What-are-Block-producing-nodes-and-relay-nodes
-
-https://developers.cardano.org/en/testnets/cardano/tools/staking-calculator/
+http://astorpool.org/
 
 ### Organizations & Events
 https://cardanosummit.iohk.io/
@@ -273,3 +306,7 @@ N2 type. $24 -> $57
 
 `ps fjx`
 ![HealthyRunningNode](./img/healthy-running-node.png)
+
+https://stackoverflow.com/questions/10408816/how-do-i-use-the-nohup-command-without-getting-nohup-out  
+https://unix.stackexchange.com/questions/23010/how-to-make-nohup-not-create-any-output-files-and-so-not-eat-all-space says:  
+nohup ./build.sh >& /dev/null &
