@@ -94,13 +94,30 @@ Block number: 2298369
 tail -f nohup.out
 killall cardano-node
 
-## Run - Stake Pool Course - Make vkey skey and address
-`mkdir ~/keys` and follow  [instructions](https://cardano-foundation.gitbook.io/stake-pool-course/stake-pool-guide/stake-pool-operations/keys_and_addresses)
+## Run - Stake Pool Course
+## Build Address
+[instructions](https://cardano-foundation.gitbook.io/stake-pool-course/stake-pool-guide/stake-pool-operations/keys_and_addresses)
 
-vkey verification key
-skey signing key
+ cardano-cli address key-gen \
+ --verification-key-file payment.vkey \
+ --signing-key-file payment.skey
 
-^ use these to make a payment address
+ cardano-cli address build \
+ --payment-verification-key-file payment.vkey \
+ --out-file payment.addr \
+ --testnet-magic 1097911063
+
+cardano-cli address key-gen \
+--verification-key-file payment2.vkey \
+--signing-key-file payment2.skey
+
+cardano-cli address build \
+--payment-verification-key-file payment2.vkey \
+--out-file payment2.addr \
+--testnet-magic 1097911063
+
+vkey is verification key
+skey is signing key
 
 Check balance at the address
 ```
@@ -112,10 +129,9 @@ cardano-cli query utxo \
 
 `cardano-cli get-tip --testnet-magic $MAGIC`
 
-1. Get test ADA from the faucet:  
+Get test ADA from the faucet:  
 https://developers.cardano.org/en/testnets/cardano/tools/faucet/
 
-2.
 ```
 Success
 Your transaction has been successful and 1000 ADA have been sent to addr_test1vqmn9dphgt5df90y34evf8jgv7ukl7rllwyhd06q55azsfs2v9ekv.
@@ -130,8 +146,7 @@ https://explorer.cardano-testnet.iohkdev.io/en/transaction?id=9c010b50cfacc0530a
 
 re-run `cardano-cli query utxo` to check.
 
-
-3. When you have finished using your test tokens, please return them to the faucet so that other members of the community can use them. Please return your test tokens to this address:
+Please return your test tokens to this address:
 ```
 addr_test1qqr585tvlc7ylnqvz8pyqwauzrdu0mxag3m7q56grgmgu7sxu2hyfhlkwuxupa9d5085eunq2qywy7hvmvej456flknswgndm3
 ```
@@ -153,7 +168,7 @@ cardano-cli query tip --testnet-magic 1097911063
 18363437 becomes 18364637
 
 ```
-// Get the TxId (index#1)
+// Get the TxId (index#0)
 cardano-cli query utxo \
 --mary-era \
 --address $(cat payment.addr) \
@@ -176,10 +191,10 @@ Generates tx.raw
 
 Build Tx w/ fee
 cardano-cli transaction build-raw \
---tx-in 9c010b50cfacc0530aff9a100d30cb13511adb9cefc73711c1439681e400c925#1 \
+--tx-in 9c010b50cfacc0530aff9a100d30cb13511adb9cefc73711c1439681e400c925#0 \
 --tx-out $(cat payment2.addr)+100000000 \
 --tx-out $(cat payment.addr)+899825567 \
---ttl 18364637 \
+--ttl 19483288 \
 --fee 174433 \
 --out-file tx.raw
 
@@ -190,12 +205,119 @@ cardano-cli transaction sign \
 --out-file tx.signed
 
 cardano-cli transaction submit \
-        --tx-file tx.signed \
-        --testnet-magic 1097911063
+    --tx-file tx.signed \
+    --testnet-magic 1097911063
 
-        cardano-cli transaction submit \
-        --tx-file tx.signed \
-        --testnet-magic 42
+cardano-cli transaction submit \
+--tx-file tx.signed \
+--testnet-magic 42
+
+NOTE changed index from #1 to #0 because '0' was correct index here, WORKED  
+https://iohk.zendesk.com/hc/en-us/articles/900001210346-Transactions-errors-BadInputsUTxO-
+
+
+#### Staking
+> Finally, we can create our stake address. This address CAN'T receive payments but will receive the rewards from participating in the protocol. We will save this address in the file stake.addr
+ cardano-cli stake-address key-gen \
+ --verification-key-file stake.vkey \
+ --signing-key-file stake.skey
+
+ cardano-cli stake-address build \
+ --stake-verification-key-file stake.vkey \
+ --out-file stake.addr \
+ --testnet-magic 1097911063
+
+ (PAYMENT ADDRESS cardano-cli address build \
+ --payment-verification-key-file payment.vkey \
+ --out-file payment.addr \
+ --testnet-magic 1097911063)
+
+> Now that we have a stake address, it is time to regenerate a payment address. This time we use both the stake verification key and payment verification key to build the address. With this, both addresses will be linked together and associated with one another.
+
+ cardano-cli address build \
+ --payment-verification-key-file ../keys/payment.vkey \
+ --stake-verification-key-file stake.vkey \
+ --out-file paymentwithstake.addr \
+ --testnet-magic 1097911063
+
+#### Create a (stake) Registration Certificate
+cardano-cli stake-address registration-certificate \
+--stake-verification-key-file stake.vkey \
+--out-file stake.cert
+
+> Once the certificate has been created, we must include it in a transaction to post it to the blockchain.
+
+Get the slot # again (cardano-cli query tip --testnet-magic 1097911063)  
+it's 
+19483520...so use  
+19486520
+
+
+check its index...  
+cardano-cli query utxo \
+--mary-era \
+--address $(cat paymentwithstake.addr) \
+--testnet-magic 1097911063  
+(returned nothing, so using index 0)  
+
+cardano-cli transaction build-raw \
+--tx-in b64ae44e1195b04663ab863b62337e626c65b0c9855a9fbb9ef4458f81a6f5ee#1 \
+--tx-out $(cat paymentwithstake.addr)+0 \
+--ttl 0 \
+--fee 0 \
+--out-file tx.raw \
+--certificate-file stake.cert
+
+Calculate fee..  
+cardano-cli transaction calculate-min-fee \
+--tx-body-file tx.raw \
+--tx-in-count 1 \
+--tx-out-count 1 \
+--witness-count 1 \
+--byron-witness-count 0 \
+--testnet-magic 1097911063 \
+--protocol-params-file ../keys/protocol.json
+fee is: 172761 Lovelace  
+
+cat ../keys/protocol.json  
+keyDeposit is 2000000  
+
+Check...
+cardano-cli query utxo \
+    --mary-era \
+    --address $(cat ../keys/payment.addr) \
+    --testnet-magic 1097911063
+has 899825567 lovelace
+so 899825567 - fee - deposit
+899825567 - 172761 - 2000000 = 897652806
+
+Ok now, need to send ADA from payment address to stake addres...
+cardano-cli transaction build-raw \
+--tx-in d965bfca4782d96ebd024206d179b2748ddeb29d99639fe6f88dc2f3c27d3d1d#1 \
+--tx-out $(cat paymentwithstake.addr)+897652806 \
+--ttl 19486520 \
+--fee 172761 \
+--out-file tx.raw \
+--certificate-file stake.cert  
+
+Sign it...
+cardano-cli transaction sign \
+--tx-body-file tx.raw \
+--signing-key-file ../keys/payment.skey \
+--signing-key-file stake.skey \
+--testnet-magic 1097911063 \
+--out-file tx.signed  
+
+And submit it...  
+cardano-cli transaction submit \
+--tx-file tx.signed \
+--testnet-magic 1097911063
+
+
+
+> Create a transaction with only one input and one output sending all the funds to paymentwithstake.addr
+Seems that if you query utxo of payment.addr, there are no txhash's, and it's because its balance became empty after sending lovelace to paymentwithstake.addr
+
 
 ## Monitor & Shutdown
 Prometheus and EKG (haskel)  
